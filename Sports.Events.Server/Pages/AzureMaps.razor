@@ -1,0 +1,15 @@
+﻿@page "/AzureMaps"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center= new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom= 10 }"
+          StyleOptions="StyleOptions" />
+
+@code {
+    public StyleOptions StyleOptions = new StyleOptions
+        {
+            Style = MapStyle.GrayscaleDark,
+            ShowLogo = false,
+            ShowFeedbackLink = false
+        };
+}

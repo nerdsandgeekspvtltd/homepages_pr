@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Pages\EventItem2.razor.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="Pages\EventItem2.razor" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+		<PackageReference Include="Darnton.Blazor.DeviceInterop" Version="0.1.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.1" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Identity.Client" Version="4.61.3" />
+		<PackageReference Include="Syncfusion.Blazor" Version="25.2.7" />
+		<PackageReference Include="Syncfusion.Tools.Windows" Version="25.2.7" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Syncfusion.Blazor">
+	    <HintPath>..\..\..\..\cms\cms\Demo_App\Demo_App\bin\Debug\net6.0\Syncfusion.Blazor.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<Target Name="CheckNPMIsInstalled" BeforeTargets="InstallNPM">
+		<Exec Command="npm -v" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+
+		<Error Condition="'$(ErrorCode)' != '0'" Text="You must install npm to run this task" />
+	</Target>
+
+	<Target Name="InstallNPM" BeforeTargets="BuildTailwindCSS">
+		<Exec Command="npm install" />
+		<Touch Files="$(NpmLastInstall)" AlwaysCreate="true" />
+	</Target>
+
+	<Target Name="BuildTailwindCSS" BeforeTargets="Compile">
+		<Exec Command="npm run buildcss:debug" Condition="'$(Configuration)' == 'Debug'" />
+		<Exec Command="npm run buildcss:release" Condition="'$(Configuration)' == 'Release'" />
+	</Target>
+
+</Project>

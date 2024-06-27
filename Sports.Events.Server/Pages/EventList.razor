@@ -1,0 +1,265 @@
+﻿@page "/"
+@page "/EventsHome"
+@inject Services.SharedService sharedService
+
+<style>
+    .bg-div-filters {
+        /* background-color: rgb(187 247 208); */
+        border-radius: 1rem;
+    }
+
+    .custom-blue-color {
+        background-color: darkblue;
+    }
+</style>
+
+
+<div class="@GetFontSizeStyle">
+    <div class="border-b border-gray-900/10  flex flex-column items-center bg-div-filters">
+        <div class="flex gap-6 items-center bg-green-200 rounded-3xl m-3 p-4">
+
+            <div class="flex flex-col gap-1 justify-center items-center  bg-#e5f6df dark:bg-transparent px-2 py-2 rounded-lg">
+                <div class=" rounded-2xl bg-slate-300 h-10 w-10 flex flex-col justify-center ">
+                    <img class="h-6 w-6 self-center" src="https://res.cloudinary.com/dzax35hss/image/upload/v1718806396/8666594_slack_icon_be4sqs.png">
+                </div>
+                <p class="font-semibold text-primary text-gray-600 mb-2">Event Divisions</p>
+                <div class="flex flex-wrap gap-2">
+                    <select @bind="filters.DivisionsIds" @oninput="HandleDivsionFilterChange" Placeholder="Select" class="mb-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                        <option value=""> Select</option>
+                        @foreach (var division in EventDivisions)
+                        {
+                            <option value="@division">@division</option>
+                        }
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1 justify-center items-center  bg-#e5f6df dark:bg-transparent px-2 py-2  rounded-lg">
+                <div class=" rounded-2xl bg-slate-300 h-10 w-10 flex flex-col justify-center ">
+                    <img class="h-6 w-6 self-center" src="https://res.cloudinary.com/dzax35hss/image/upload/v1718806396/8666671_briefcase_icon_upjglv.png">
+                </div>
+                <p class="font-semibold text-primary text-gray-600 mb-2">Event Disciplines</p>
+                <div class="flex flex-wrap gap-2">
+                    <SfMultiSelect Width="200px" TValue="List<string>" @bind-Value="filters.DisciplinesIds" TItem="string" Placeholder="Select" DataSource="@EventDisciplines">
+                        <MultiSelectEvents TValue="List<string>" TItem="string" Cleared="@Clearedhandler" Closed="@FetchEventsOnChange"></MultiSelectEvents>
+                    </SfMultiSelect>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1 justify-center items-center  bg-#e5f6df dark:bg-transparent px-2 py-2  rounded-lg">
+                <div class=" rounded-2xl bg-slate-300 h-10 w-10 flex flex-col justify-center ">
+                    <img class="h-6 w-6 self-center" src="https://res.cloudinary.com/dzax35hss/image/upload/v1718806396/8666623_command_icon_tk2psv.png">
+                </div>
+                <p class="font-semibold text-primary text-gray-600 mb-2">Event Tags</p>
+                <div class="flex flex-wrap gap-2">
+                    <SfMultiSelect Width="200px" TValue="List<string>" @bind-Value="filters.TagIds" TItem="string" Placeholder="Select" DataSource="@EventTags">
+                        <MultiSelectEvents TValue="List<string>" TItem="string" Cleared="@Clearedhandler" Closed="@FetchEventsOnChange"></MultiSelectEvents>
+                    </SfMultiSelect>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-1 justify-center items-center  bg-#e5f6df dark:bg-transparent px-2 py-2  rounded-lg">
+                <div class=" rounded-2xl bg-slate-300 h-10 w-10 flex flex-col justify-center ">
+                    <img class="h-6 w-6 self-center" src="https://res.cloudinary.com/dzax35hss/image/upload/v1718806396/8666681_edit_icon_whrzkj.png">
+                </div>
+                <p class="font-semibold text-primary text-gray-600 mb-2">Event Location</p>
+                <div class="flex flex-wrap gap-2">
+                    <select id="eventLocationType" @bind="eventLocationType" class="mb-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " @oninput="HandleEventLocationTypeChange">
+                        <option value="" selected>select</option>
+                        <option value="NearByMe">Events Near by me</option>
+                        <option value="OnMap">On Map</option>
+                    </select>
+                </div>
+            </div>
+
+            <form class="w-30">
+                <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                        </svg>
+                    </div>
+                    <input @oninput="SearchBlogByKeyword" type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search..." required />
+                    @* <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button> *@
+                </div>
+            </form>
+            <div class="sm:col-span-4 px-4">
+                <button @onclick="ResetForm" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    @{
+        showMap = string.IsNullOrEmpty(eventLocationType) ? "h-0 invisible" : "";
+    }
+
+    <div class="p-2 m-2 w-100 overflow-hidden @showMap ">
+        <div id="map"></div>
+    </div>
+
+
+
+    @if (eventList == null)
+    {
+        <p>Loading...</p>
+    }
+    else if (eventList.Items == null)
+    {
+        <p>No events found.</p>
+    }
+    else
+    {
+
+
+        <div class="flex justify-content-between mx-5 my-2">
+            <h2 class=" font-bold leading-7 text-indigo-600 italic mt-2">Latest Events</h2>
+            @* <button type="button" @onclick="ViewAllEvents" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800">View All</button> *@
+
+        </div>
+
+        <table class="table-auto w-full border-collapse border border-gray-300 mt-3">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-300 px-4 py-2">Event Name</th>
+                    <th class="border border-gray-300 px-4 py-2">Description</th>
+                    <th class="border border-gray-300 px-4 py-2">View</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var eventItem in eventList.Items)
+                {
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">@eventItem.Name</td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <p class="line-clamp-1">
+                                @((MarkupString)eventItem.Description)
+                            </p>
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <a href="Event/@eventItem.Id">
+                                Detailed Event
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <Pagination paginationModel="PaginationModel" PageChanged="LoadList" />
+    }
+
+
+
+
+    @* <div class="flex gap-6 items-center mt-10">
+    <div class="sm:col-span-4">
+    <label for="" class="block mb-2 text-sm font-medium text-gray-900">Event Divisions</label>
+    <select @bind="filters.DivisionsIds" @oninput="HandleDivsionFilterChange" Placeholder="Select" class="mb-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+    <option value=""> Select</option>
+    @foreach (var division in EventDivisions)
+    {
+    <option value="@division">@division</option>
+    }
+
+    </select>
+    </div>
+
+    <div class="flex flex-col gap-1 justify-center items-start w-[280px] bg-#dbe4e3 dark:bg-transparent px-4 py-4 shadow-xl rounded-lg">
+    <p class="font-semibold text-xl text-gray-600 mb-2">Event Types</p>
+    <div class="flex flex-wrap gap-2">
+    <SfMultiSelect Width="200px" TValue="List<string>" @bind-Value="filters.TagIds" TItem="string" Placeholder="Select" DataSource="@EventTypes">
+    <MultiSelectEvents TValue="List<string>" TItem="string" Cleared="@Clearedhandler" Closed="@FetchEventsOnChange"></MultiSelectEvents>
+    </SfMultiSelect>
+
+    </div>
+    </div>
+
+    <div class="sm:col-span-4">
+    <label for="" class="block mb-2 text-sm font-medium text-gray-900">Event Tags</label>
+    <SfMultiSelect Width="200px" TValue="List<string>" @bind-Value="filters.TagIds" TItem="string" Placeholder="Select" DataSource="@EventTags">
+    <MultiSelectEvents TValue="List<string>" TItem="string" Cleared="@Clearedhandler" Closed="@FetchEventsOnChange"></MultiSelectEvents>
+    </SfMultiSelect>
+    </div>
+
+
+    <div class="sm:col-span-4">
+    <label for="" class="block mb-2 text-sm font-medium text-gray-900">Event Location</label>
+
+    <select id="eventLocationType" @bind="eventLocationType" class="mb-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " @oninput="HandleEventLocationTypeChange">
+    <option value="" selected>select</option>
+    <option value="NearByMe">Events Near by me</option>
+    <option value="OnMap">On Map</option>
+    </select>
+
+    </div>
+
+
+    <form class="w-30">
+    <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Search</label>
+    <div class="relative">
+    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+    </svg>
+    </div>
+    <input @oninput="SearchBlogByKeyword" @bind="filters.Keyword" type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 " placeholder="" required />
+    </div>
+    </form>
+    <div class="sm:col-span-4">
+    <button @onclick="ResetForm" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2">Reset</button>
+
+    </div>
+
+    </div> *@
+
+</div>
+
+@code {
+    private int fontSize = 16;
+    private string contrastClass = "";
+
+    protected override void OnInitialized()
+    {
+        sharedService.OnChange += StateHasChanged;
+        base.OnInitialized();
+    }
+
+    public void Dispose()
+    {
+        sharedService.OnChange -= StateHasChanged;
+    }
+    private void AdjustFontSize(int change)
+    {
+        fontSize = Math.Clamp(fontSize + change, 10, 24);
+    }
+
+    private void ResetFontSize()
+    {
+        fontSize = 16;
+    }
+
+    private void SetContrast(string contrastType)
+    {
+        contrastClass = contrastType switch
+        {
+            "black" => "contrast-black",
+            "white" => "contrast-white",
+            _ => ""
+        };
+    }
+
+    private string GetFontSizeStyle()
+    {
+        return $@"
+        p {{ font-size: {sharedService.FontSize}px; }}
+        h1, h2, h3, h4, h5, h6 {{ font-size: {sharedService.FontSizeHead}px; }}
+        time {{font-size: {sharedService.FontSize}px;}}";
+        //return $"font-size: {sharedService.FontSize}px;";
+    }
+
+    private string GetContrastStyle()
+    {
+        return contrastClass;
+    }
+}

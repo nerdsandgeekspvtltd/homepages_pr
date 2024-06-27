@@ -1,0 +1,79 @@
+﻿@page "/signlanguage"
+
+
+
+<div class="main-content mx-auto" style="@GetFontSizeStyle() @GetContrastStyle()">
+
+    <section class="p-6 rounded-lg shadow-lg mb-8">
+        <h2 class="text-2xl font-bold mb-4">Information in Sign Language</h2>
+        <p class="mb-4">Auf dieser Seite informieren wir Sie in Deutscher Gebärdensprache Videos über die Inhalte, Navigation und der Erklärung zur Barrierefreiheit des Internetauftritts der Stadtwerke Gummersbach.</p>
+
+        <div class="mb-4">
+            <h3 class="text-xl font-semibold mb-2">Informationen zu den Stadtwerken Gummersbach</h3>
+            <video controls class="w-full rounded-lg shadow-lg mb-4">
+                <source src="video-url-placeholder.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-xl font-semibold mb-2">Informationen zur Bedienung der Internetseite</h3>
+            <video controls class="w-full rounded-lg shadow-lg mb-4">
+                <source src="video-url-placeholder.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div class="mb-4">
+            <h3 class="text-xl font-semibold mb-2">Informationen zu der Erklärung zur Barrierefreiheit</h3>
+            <video controls class="w-full rounded-lg shadow-lg mb-4">
+                <source src="video-url-placeholder.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <p class="mb-4">Ombudsstelle für barrierefreie Informationstechnik des Landes NRW:</p>
+        <ul class="list-disc ml-6 mb-2">
+            <li>Website: <a href="https://www.mags.nrw/ombudsstelle-barrierefreie-informationstechnik" class="text-blue-500 hover:underline">www.mags.nrw/ombudsstelle-barrierefreie-informationstechnik</a></li>
+            <li>Telefon: 0211 / 855-3451</li>
+            <li>Email: <a href="mailto:ombudsstelle-barrierefreie-it@mags.nrw.de" class="text-blue-500 hover:underline">ombudsstelle-barrierefreie-it@mags.nrw.de</a></li>
+        </ul>
+    </section>
+
+</div>
+
+
+@code {
+    private int fontSize = 16;
+    private string contrastClass = "";
+
+    private void AdjustFontSize(int change)
+    {
+        fontSize = Math.Clamp(fontSize + change, 10, 24);
+    }
+
+    private void ResetFontSize()
+    {
+        fontSize = 16;
+    }
+
+    private void SetContrast(string contrastType)
+    {
+        contrastClass = contrastType switch
+        {
+            "black" => "contrast-black",
+            "white" => "contrast-white",
+            _ => ""
+        };
+    }
+
+    private string GetFontSizeStyle()
+    {
+        return $"font-size: {fontSize}px;";
+    }
+
+    private string GetContrastStyle()
+    {
+        return contrastClass;
+    }
+}

@@ -1,0 +1,126 @@
+﻿@page "/Blog/{BpId?}"
+
+@using Sports.Blogs.WA;
+
+@if (blogPost != null && blogPost.Bpid > 0)
+{
+
+    <div class=" mx-auto flex flex-col py-3">
+
+        <div class="relative w-full h-56 overflow-hidden">
+            <img src="@Utilities.CheckIfImageisEmpty(blogPost.HeaderImage)"
+                 alt=""
+                 class="h-56 aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]">
+            <div class="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10"></div>
+        </div>
+
+        @*  <div class="p-1 mx:p-2 py-5 m-1 borderflex justify-center align-middle">
+
+    <h1 class="mt-2 text-2xl font-bold sm:text-4xl text-center">@blogPost.Title</h1>
+
+    <p class="text-base font-semibold leading-7 text-indigo-600">Published on : @blogPost.PublishedOn</p>
+    </div> *@
+
+        <div class="p-1 mx:p-2 py-5 m-1 borderflex justify-center align-middle">
+
+            <h1 class="mt-2 text-2xl font-bold text-center tracking-tight sm:text-4xl">@blogPost.Title</h1>
+
+            <p class="text-base font-semibold leading-7 text-indigo-600 italic">   <span class="font-bold">Created By </span> @(blogPost.Tenant.FirstName + " " + blogPost.Tenant.LastName)</p>
+        </div>
+
+        <div class="flex justify-between items-start">
+            <h6 class="text-white text-sm bg-black rounded-lg px-2 py-1">Description</h6>
+            <h6>
+                Published on : <b> @blogPost.PublishedOn </b>
+            </h6>
+        </div>
+
+        <div class="p-2">
+
+            <p class="mt-6 text-xl leading-8">
+                @((MarkupString)blogPost.Description)
+            </p>
+
+
+        </div>
+
+        @* <div class="relative mt-8 flex items-center gap-x-4">
+
+    <div class="text-sm leading-6">
+    <p class="text-gray-600">Created By</p>
+    <p class="font-semibold text-gray-900">
+    <a href="javascript:void(0)">
+    <span class="absolute inset-0"></span>
+    @(blogPost.Tenant.FirstName + " " + blogPost.Tenant.LastName)
+    </a>
+    </p>
+
+    </div>
+    </div> *@
+
+        <div>
+            <h6 class="text-primary text-xl my-2">
+                Tags :
+
+                @if (blogPost.BlogAttributes != null && blogPost.BlogAttributes.Any())
+                {
+                    @foreach (var att in blogPost.BlogAttributes)
+                    {
+                        @if (att.AttributeType == "tag")
+                        {
+                            <span class="rounded bg-dark text-white p-2 m-2 d-inline-block">
+                                @att.AttributeTitle
+                            </span>
+                        }
+                    }
+
+                }
+
+            </h6>
+
+            <h6 class="text-primary text-xl my-2">
+                Divisions :
+
+                @if (blogPost.BlogAttributes != null && blogPost.BlogAttributes.Any())
+                {
+                    @foreach (var att in blogPost.BlogAttributes)
+                    {
+                        @if (att.AttributeType == "division")
+                        {
+                            <span class="rounded bg-dark text-white p-2 m-2 d-inline-block">
+                                @att.AttributeTitle
+                            </span>
+                        }
+                    }
+
+                }
+
+            </h6>
+
+            <h6 class="text-primary text-xl my-2">
+                Discipline :
+
+                @if (blogPost.BlogAttributes != null && blogPost.BlogAttributes.Any())
+                {
+                    @foreach (var att in blogPost.BlogAttributes)
+                    {
+                        @if (att.AttributeType == "discipline")
+                        {
+                            <span class="rounded bg-dark text-white p-2 m-2 d-inline-block">
+                                @att.AttributeTitle
+                            </span>
+                        }
+                    }
+
+                }
+
+            </h6>
+
+        </div>
+
+    </div>
+
+
+
+}
+

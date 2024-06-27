@@ -1,0 +1,180 @@
+﻿@page "/EventMaps"
+@using Sports.Events.Server.Models
+
+<button type="button" @onclick="ShowNearByEvents">Show near by me</button>
+
+<div id="map" style="height: 500px;"></div>
+
+<div class="m-2 p-2">
+
+
+    @if (filteredItems != null && filteredItems.Any())
+    {
+
+        <table class="table-auto w-full border-collapse border border-gray-300">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-300 px-4 py-2">Event Name</th>
+                    <th class="border border-gray-300 px-4 py-2">Description</th>
+                    <th class="border border-gray-300 px-4 py-2">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var eventItem in filteredItems)
+                {
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">@eventItem.Name</td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <p class="line-clamp-1">
+                                @((MarkupString)eventItem.Description)
+                            </p>
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <a href="Event/@eventItem.Id">
+                                View more
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+
+</div>
+
+<script>
+
+    // JavaScript function to call the ShowNearByEvents method
+    function callShowNearByEvents(eventLocation) {
+
+        console.log("function called");
+        console.log(eventLocation);
+
+        DotNet.invokeMethodAsync('SportsCloudEvents', 'testFunction', eventLocation)
+            .then(() => {
+                console.log('ShowNearByEvents method called successfully');
+            })
+            .catch(error => {
+                console.error('Error calling ShowNearByEvents method:', error);
+            });
+
+    }
+
+
+
+    function onMapClick(e) {
+        alert("You clicked the map at " + e.latlng);
+        console.log(e.latlng.lat);
+        console.log(e.latlng.lng);
+
+        var eventLocation = {
+            Name: "Event Name",
+            Latitude: e.latlng.lat,
+            Longitude: e.latlng.lng
+        };
+        callShowNearByEvents(eventLocation);
+    }
+
+
+
+
+    window.mapInterop = {
+        initMap: function (mapId, lat, long) {
+            var map = L.map(mapId).setView([lat, long], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            map.on('click', onMapClick);
+            return map;
+        },
+        addMarker: function (map, latitude, longitude) {
+            var marker = L.marker([latitude, longitude]).addTo(map);
+        },
+        getMarkers: function (map) {
+            var markers = [];
+            map.eachLayer(function (layer) {
+                if (layer instanceof L.Marker) {
+                    markers.push(layer.getLatLng());
+                }
+            });
+            return markers;
+        },
+
+        // RegisterMarkerFunction : function(objRef, map){
+        //     function callShowNearByEvents(eventLocation) {
+        //         objRef.invokeMethodAsync('SportsCloudEvents', 'ShowNearByEvents', eventLocation)
+        //     }
+
+        //     function onMapClick(e) {
+        //         alert("You clicked the map at " + e.latlng);
+        //         console.log(e.latlng.lat);
+        //         console.log(e.latlng.lng);
+
+        //         var eventLocation = {
+        //             Name: "Event Name",
+        //             Latitude: e.latlng.lat,
+        //             Longitude: e.latlng.lng
+        //         };
+        //         callShowNearByEvents(eventLocation);
+        //     }
+
+        //     map.on('click', onMapClick);
+
+        // },
+        getCurrentLocation: function () {
+            return new Promise((resolve, reject) => {
+                if ("geolocation" in navigator) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const latitude = position.coords.latitude;
+                            const longitude = position.coords.longitude;
+                            resolve({ name: "success", latitude: latitude, longitude: longitude });
+                        },
+                        (error) => {
+                            switch (error.code) {
+                                case error.PERMISSION_DENIED:
+                                    reject("User denied the request for Geolocation.");
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    reject("Location information is unavailable.");
+                                    break;
+                                case error.TIMEOUT:
+                                    reject("The request to get user location timed out.");
+                                    break;
+                                default:
+                                    reject("An unknown error occurred.");
+                                    break;
+                            }
+                        }
+                    );
+                } else {
+                    reject("Geolocation is not supported by this browser.");
+                }
+            });
+        }
+    };
+</script>
+
+
+@code {
+
+
+    public class location
+    {
+        public decimal latitude { get; set; }
+        public decimal longitude { get; set; }
+    }
+
+
+
+
+    // [JSInvokable("testFunction")]
+    // public static async Task testFunction(EventLocation eventLocation)
+    // {
+    //     await ShowNearByEvents(eventLocation);
+
+    // }
+
+
+}

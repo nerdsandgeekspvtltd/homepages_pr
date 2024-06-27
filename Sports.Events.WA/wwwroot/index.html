@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>SportsCloudEvents</title>
+    <base href="/" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link href="SportsCloudEvents.styles.css" rel="stylesheet" />
+    <link href="css/tailwind.debug.css" rel="stylesheet" />
+
+    <link href="_content/Syncfusion.Blazor/styles/bootstrap.css" rel="stylesheet">
+    <script src="_content/Syncfusion.Blazor/scripts/syncfusion-blazor.min.js" type="text/javascript"></script>
+
+    <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
+    <link rel="stylesheet"
+          href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.css"
+          type="text/css" />
+
+    <style>
+        #map, #eventDetailMap {
+            height: 300px;
+            width: 100%;
+        }
+
+        .h-0 {
+            height: 0 !important;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #FFF;
+            border-bottom-color: #FF3D00;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+
+
+</head>
+
+<body>
+    <div id="app">
+
+        <div class="d-flex justify-content-center align-items-center" style="width:100vw;height:100vh">
+            <div>
+
+                <span class="loader"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+
+    <script src="_framework/blazor.webassembly.js"></script>
+
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.js"></script>
+
+    <script src="js/AzureMaps.js"></script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+﻿@page "/Calender"
+@using Syncfusion.Blazor.Schedule
+
+
+
+<SfSchedule TValue="AppointmentData" Readonly="true" @ref="ScheduleRef" Height="650px" @bind-SelectedDate="@CurrentDate">
+
+
+    <ScheduleQuickInfoTemplates>
+        <HeaderTemplate>
+            <div class="m-1 ">
+
+                <div class="p-1 d-flex bg-primary text-light justify-content-between align-items-center">
+                    <h6>
+                        Appointment Details
+
+                    </h6>
+                    <SfButton OnClick="PopupClose" IconCss="e-icons e-close-icon" CssClass="e-close e-flat e-round e-small" type="button"></SfButton>
+                </div>
+
+
+
+            
+
+
+            </div>
+        </HeaderTemplate>
+        <ContentTemplate>
+            <div class="p-1">
+                <h6 class="my-2">
+
+                    @(GetEventDetails((context as AppointmentData)))
+                </h6>
+
+
+
+                <div class="mb-2">
+                    <a href="@((context as AppointmentData).Link) " class="btn btn-success btn-sm text-light">More Info</a>
+                </div>
+            </div>
+        </ContentTemplate>
+        <FooterTemplate>
+        </FooterTemplate>
+    </ScheduleQuickInfoTemplates>
+
+    <ScheduleEvents TValue="AppointmentData" OnEventClick="OnEventClick"></ScheduleEvents>
+
+    <ScheduleViews>
+        <ScheduleView Option="View.Month" IsSelected="true"></ScheduleView>
+        <ScheduleView Option="View.Day"></ScheduleView>
+        <ScheduleView Option="View.Week"></ScheduleView>
+        @*  <ScheduleView Option="View.WorkWeek"></ScheduleView> *@
+        @*   <ScheduleView Option="View.Agenda"></ScheduleView> *@
+    </ScheduleViews>
+    <ScheduleEventSettings DataSource="@DataSource" AllowEditFollowingEvents="false"></ScheduleEventSettings>
+</SfSchedule>
+
+@code {
+
+}
